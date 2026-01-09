@@ -4,7 +4,7 @@ FastAPI application entry point
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
-from app.api.v1 import sites
+from app.api.v1 import sites, posts
 
 settings = get_settings()
 
@@ -27,6 +27,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(sites.router, prefix="/api/v1/sites", tags=["sites"])
+app.include_router(posts.router, prefix="/api/v1", tags=["posts"])
 
 
 @app.get("/")
