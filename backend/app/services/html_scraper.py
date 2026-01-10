@@ -223,7 +223,7 @@ def _parse_date(date_text: str, date_format: Optional[str] = None) -> Optional[d
         # ISO 형식 시도
         try:
             return datetime.fromisoformat(date_text.replace('Z', '+00:00'))
-        except:
+        except (ValueError, AttributeError):
             pass
 
         logger.warning(f"Could not parse date: {date_text}")

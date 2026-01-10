@@ -3,6 +3,7 @@ import feedparser
 from typing import List, Dict, Optional
 from datetime import datetime
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -70,13 +71,13 @@ def _parse_rss_entry(entry) -> Optional[Dict]:
         if hasattr(entry, 'published_parsed') and entry.published_parsed:
             try:
                 published_at = datetime(*entry.published_parsed[:6])
-            except:
+            except (ValueError, TypeError, AttributeError):
                 pass
 
         if not published_at and hasattr(entry, 'updated_parsed') and entry.updated_parsed:
             try:
                 published_at = datetime(*entry.updated_parsed[:6])
-            except:
+            except (ValueError, TypeError, AttributeError):
                 pass
 
         # 저자 추출
@@ -95,7 +96,6 @@ def _parse_rss_entry(entry) -> Optional[Dict]:
 
         # HTML 태그 제거 (간단한 방법)
         if excerpt:
-            import re
             excerpt = re.sub(r'<[^>]+>', '', excerpt)
             excerpt = excerpt.strip()[:500]  # 최대 500자
 
@@ -120,7 +120,6 @@ def _parse_rss_entry(entry) -> Optional[Dict]:
 
         # content 내 이미지 추출
         if not image_url and hasattr(entry, 'content') and entry.content:
-            import re
             content_html = entry.content[0].get('value', '')
             img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', content_html)
             if img_match:

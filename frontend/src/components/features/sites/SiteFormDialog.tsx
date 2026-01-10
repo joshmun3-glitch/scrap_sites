@@ -57,7 +57,6 @@ export default function SiteFormDialog({ isOpen, onClose, siteId }: SiteFormDial
     },
   });
 
-  const siteType = watch('siteType');
   const ruleType = watch('scrapingRule.ruleType');
 
   // 사이트 데이터 로드 (수정 모드)
@@ -98,7 +97,7 @@ export default function SiteFormDialog({ isOpen, onClose, siteId }: SiteFormDial
         await createSite.mutateAsync(data as CreateSiteInput);
       }
       onClose();
-    } catch (error) {
+    } catch {
       // 에러는 hook에서 toast로 처리됨
     }
   };

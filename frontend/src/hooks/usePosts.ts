@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { postsService } from '@/services/posts.service';
 import { PostFilters } from '@/types/post.types';
 import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 // 쿼리 키 상수
 export const POSTS_QUERY_KEY = ['posts'];
@@ -32,7 +33,7 @@ export function useTogglePostRead() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: POSTS_QUERY_KEY });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '읽음 상태 변경에 실패했습니다.';
       toast.error(message);
     },
@@ -48,7 +49,7 @@ export function useTogglePostStar() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: POSTS_QUERY_KEY });
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '별표 상태 변경에 실패했습니다.';
       toast.error(message);
     },
@@ -69,7 +70,7 @@ export function useBulkMarkAsRead() {
         : `${variables.postIds.length}개의 글을 읽음으로 표시했습니다.`;
       toast.success(message);
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '일괄 처리에 실패했습니다.';
       toast.error(message);
     },
@@ -86,7 +87,7 @@ export function useDeletePost() {
       queryClient.invalidateQueries({ queryKey: POSTS_QUERY_KEY });
       toast.success('글이 삭제되었습니다.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '글 삭제에 실패했습니다.';
       toast.error(message);
     },

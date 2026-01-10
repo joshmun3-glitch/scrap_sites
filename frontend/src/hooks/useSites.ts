@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { sitesService } from '@/services/sites.service';
 import { CreateSiteInput, UpdateSiteInput } from '@/types/site.types';
 import toast from 'react-hot-toast';
+import { AxiosError } from 'axios';
 
 // 쿼리 키 상수
 export const SITES_QUERY_KEY = ['sites'];
@@ -33,7 +34,7 @@ export function useCreateSite() {
       queryClient.invalidateQueries({ queryKey: SITES_QUERY_KEY });
       toast.success('사이트가 성공적으로 추가되었습니다.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '사이트 추가에 실패했습니다.';
       toast.error(message);
     },
@@ -52,7 +53,7 @@ export function useUpdateSite() {
       queryClient.invalidateQueries({ queryKey: [...SITES_QUERY_KEY, variables.id] });
       toast.success('사이트가 성공적으로 수정되었습니다.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '사이트 수정에 실패했습니다.';
       toast.error(message);
     },
@@ -69,7 +70,7 @@ export function useDeleteSite() {
       queryClient.invalidateQueries({ queryKey: SITES_QUERY_KEY });
       toast.success('사이트가 삭제되었습니다.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '사이트 삭제에 실패했습니다.';
       toast.error(message);
     },
@@ -86,7 +87,7 @@ export function useToggleSiteActive() {
       queryClient.invalidateQueries({ queryKey: SITES_QUERY_KEY });
       toast.success('사이트 상태가 변경되었습니다.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '상태 변경에 실패했습니다.';
       toast.error(message);
     },
@@ -104,7 +105,7 @@ export function useTestScrapingRule() {
         toast.error(data.message || '테스트에 실패했습니다.');
       }
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '테스트에 실패했습니다.';
       toast.error(message);
     },
@@ -125,7 +126,7 @@ export function useScrapeNow() {
         toast.error(data.message || '스크래핑에 실패했습니다.');
       }
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<{ detail?: string }>) => {
       const message = error.response?.data?.detail || '스크래핑에 실패했습니다.';
       toast.error(message);
     },

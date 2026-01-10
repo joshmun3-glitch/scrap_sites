@@ -21,14 +21,4 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Create base class for models
 Base = declarative_base()
 
-
-def get_db():
-    """
-    Dependency to get database session
-    Yields session and ensures it's closed after use
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# get_db() moved to app/dependencies.py with proper type hints

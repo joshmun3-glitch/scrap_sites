@@ -3,7 +3,7 @@ Site schemas for request/response validation
 """
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 
 
 class ScrapingRuleBase(BaseModel):

@@ -5,7 +5,6 @@ from sqlalchemy import desc
 from typing import List, Optional
 from app.database import get_db
 from app.models.post import Post
-from app.models.site import Site
 from app.schemas.post import PostResponse, PostListResponse
 from datetime import datetime
 

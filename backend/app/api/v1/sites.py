@@ -2,13 +2,17 @@
 Sites API endpoints
 """
 from typing import List
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
 from app.models.site import Site
 from app.models.scraping_rule import ScrapingRule
+from app.models.post import Post
 from app.schemas.site import SiteCreate, SiteUpdate, SiteResponse
+from app.services.rss_parser import parse_rss_feed, validate_rss_feed
+from app.services.html_scraper import scrape_posts_from_url, validate_html_selectors, scrape_html
 
 router = APIRouter()
 
@@ -166,9 +170,6 @@ def test_scraping_rule(site_id: int, db: Session = Depends(get_db)):
     """
     Test scraping rule for a site
     """
-    from app.services.rss_parser import validate_rss_feed
-    from app.services.html_scraper import validate_html_selectors
-
     site = db.query(Site).filter(Site.id == site_id).first()
     if not site:
         raise HTTPException(
@@ -224,11 +225,6 @@ def scrape_site_now(site_id: int, db: Session = Depends(get_db)):
     """
     Manually trigger scraping for a site
     """
-    from app.services.rss_parser import parse_rss_feed
-    from app.services.html_scraper import scrape_html
-    from app.models.post import Post
-    from datetime import datetime
-
     site = db.query(Site).filter(Site.id == site_id).first()
     if not site:
         raise HTTPException(
@@ -286,7 +282,7 @@ def scrape_site_now(site_id: int, db: Session = Depends(get_db)):
                 if post_data.get('published_at'):
                     try:
                         published_at = datetime.fromisoformat(post_data['published_at'])
-                    except:
+                    except (ValueError, TypeError):
                         pass
 
                 # Create new post
